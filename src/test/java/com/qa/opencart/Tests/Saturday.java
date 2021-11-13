@@ -6,8 +6,8 @@ public class Saturday {
 		// TODO Auto-generated method stub
 
 		
-		System.out.println("saturday change 1 ");
-		
+		System.out.println("saturday change 5 ");
+		System.out.println("saturday change 7 ");
 		
 	}
 
