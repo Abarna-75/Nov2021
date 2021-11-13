@@ -20,6 +20,9 @@ public class RegistrationsPage {
 	
 	private By pdtInfoTable = By.xpath("//div[@id='content']//ul[@class='list-unstyled'][1]");
 	private By priceInfoTable = By.xpath("//div[@id='content']//ul[@class='list-unstyled'][2]");
+	
+			
+			
 
 	
 	
@@ -30,35 +33,19 @@ public class RegistrationsPage {
 		
 	}
 	
-	@Test
+
 	
-	public void fillMyHashMap()
+	public void findMyPhone(String contactName)
 	{
-		myMap = new HashMap<String,String>();
-		
-		myMap.put("name", "MacBookPro");
-	
-		List<WebElement> listofPdt= driver.findElements(pdtInfoTable);
-		ArrayList<String> listText = new ArrayList<String>();
 		
 		
-		for(WebElement e: listofPdt)
-		{
-			String str= e.getText();
-			listText.add(str);
-			
-		}
 		
-		for(String s:listText) {
-			
-			String[] metadata= s.split(":");
-			myMap.put(metadata[0], metadata[1]);
-			
-		}
-		System.out.println(myMap);
+		System.out.println("made changes ");
 		
 		
 		
 	}
+	
+	
 	
 }
