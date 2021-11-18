@@ -1,68 +1,49 @@
-pipeline{
+pipeline 
+{
     agent any
-    stages{
-        
-        stage("Build"){
-            
-            steps{
-            echo("Building all my src code")
-            
-            }
-        }
-        
-        stage("Deploy to Dev environment"){
-            
-            steps{
-            echo("deploying to dev")
-            
-            }
-        }
-        
-         
-        stage("Deploy to QA environment"){
-            
-            steps{
-            echo("deploying to QA")
-            
-            }
-        }
-          stage("Automation testing on QA environment"){
-            
-            steps{
-            echo("testing on QA")
-            
-            }
-        }
-           
-        stage("Deploy to Pre-PROD environment"){
-            
-            steps{
-            echo("deploying to Pre-Prod")
-            
-            }
-        }
-        
-        stage("Sanity testing in Pre prod environment by PO /BA"){
-            
-            steps{
-            echo("sanity testing in Pre-Prod")
-            
-            }
-        }
-          stage("Deploy to PROD environment"){
-            
-            steps{
-            echo("deploying to Prod")
-            
-            }
-        }
-        
-        
-        
-        
+    tools {
+        maven 'maven'
     }
-    
-    
 
-    
+    stages 
+    {
+               
+        
+        stage('Test') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    git 'https://github.com/Abarna-75/Nov2021.git'
+                    sh "mvn clean install"
+                }
+            }
+        }
+                
+     
+        stage('Publish Allure Reports') {
+           steps {
+                script {
+                    allure([
+                        includeProperties: false,
+                        jdk: '',
+                        properties: [],
+                        reportBuildPolicy: 'ALWAYS',
+                        results: [[path: '/allure-results']]
+                    ])
+                }
+            }
+        }
+        
+        
+        stage('Publish Extent Report'){
+            steps{
+                     publishHTML([allowMissing: false,
+                                  alwaysLinkToLastBuild: false, 
+                                  keepAll: false, 
+                                  reportDir: 'build', 
+                                  reportFiles: 'TestExecutionReport.html', 
+                                  reportName: 'HTML Extent Report', 
+                                  reportTitles: ''])
+            }
+        }
+    }
 }
