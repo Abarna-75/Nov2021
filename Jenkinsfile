@@ -13,7 +13,7 @@ pipeline
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     git 'https://github.com/Abarna-75/Nov2021.git'
-                    sh "mvn clean install"
+                  `	bat "mvn clean install"
                 }
             }
         }
