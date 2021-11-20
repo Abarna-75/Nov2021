@@ -65,9 +65,11 @@ public class LoginPageTest extends BaseTest{
 	public void loginTest()
 	{
 		
-		aPage = loginpage.doLogin(prop.getProperty("username").trim(), prop.getProperty("password").trim());
-		Assert.assertTrue(aPage.checkLogoutLink());
+		
 		//loginpage.doLogin("naveen20animation20@gmail.com", "Selenium12345");
+		//aPage = loginpage.doLogin(prop.getProperty("username").trim(), prop.getProperty("password").trim());
+		aPage= loginpage.doLogin(System.getProperty("username"), System.getProperty("password"));
+			Assert.assertTrue(aPage.checkLogoutLink());
 	
 	}
 	
