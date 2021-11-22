@@ -29,7 +29,7 @@ public class DriverFactory {
 	
 	//@return
 	//this method is used to initialize the driver
-	
+	  
 
 	public WebDriver initDriver(Properties prop)
 		{
@@ -99,7 +99,7 @@ public class DriverFactory {
 		Properties prop=null;
 		FileInputStream finput =null;
 		String env =System.getProperty("env");
-		System.out.println("running on environment:"+env);
+		
 		
 		try {
 			if(env==null)
@@ -118,20 +118,20 @@ public class DriverFactory {
 					
 					case"qa":
 						
-						finput= new FileInputStream("./src\\test\\resources\\configuration\\config.properties");
+						finput= new FileInputStream("./src\\test\\resources\\configuration\\qa.properties");
 						break;
 									
-					case "staging":
-					   	finput= new FileInputStream("./src\\test\\resources\\configuration\\cte1test.properties");	
+					case "preprod":
+					   	finput= new FileInputStream("./src\\test\\resources\\configuration\\preprod.properties");	
 					   	break;
 					   	
 					default:
+						
 						System.out.println("please pass a valid environment name");
 						throw new Exception("NOENVIRONMENTFOUNDEXCEPTION");
 						
-						
 					
-					}
+						}
 		 	     
 			}
 		}
