@@ -23,7 +23,7 @@ public class JavaScriptUtil {
 			changeColor("rgb(255,255,0)", element);
 			
 			changeColor(elementBgColor,element);
-		}
+		} 
 	}
 	
 	

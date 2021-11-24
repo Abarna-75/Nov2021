@@ -2,8 +2,9 @@ package com.qa.democart.factory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -11,8 +12,11 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import com.qa.democart.factory.OptionsManager;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -23,6 +27,7 @@ public class DriverFactory {
 
 	public static String highlight;
 	public OptionsManager optionsManager;
+	public Properties prop;
 	
 	public static ThreadLocal<WebDriver> tldriver = new ThreadLocal<WebDriver>();
 	
@@ -33,23 +38,39 @@ public class DriverFactory {
 
 	public WebDriver initDriver(Properties prop)
 		{
+		
+		this.prop=prop;
 		optionsManager =  new OptionsManager(prop);
 		
 		String browserName= prop.getProperty("browserName");
 		highlight =prop.getProperty("highlight");
-		System.out.println("the chosen browser is" + browserName);
+		System.out.println("the chosen browser is  " + browserName);
 		
 		
 		if(browserName.equalsIgnoreCase("chrome"))
 		{  
 			WebDriverManager.chromedriver().setup();
-			tldriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+			
+			
+			if(Boolean.parseBoolean(prop.getProperty("remote")))
+			{
+				init_RemoteDriver("chrome");
+			}
+			else
+				
+				tldriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+			
 		}
-		
+		 
 		else if(browserName.equalsIgnoreCase("firefox"))
 		{
 			
 			WebDriverManager.firefoxdriver().setup();
+			
+			if(Boolean.parseBoolean((prop.getProperty("remote"))))
+					{
+									init_RemoteDriver("firefox");
+					}
 			tldriver.set(new FirefoxDriver(optionsManager.getFireFoxOptions()));
 		}
 		else
@@ -66,6 +87,40 @@ public class DriverFactory {
 	//@return 
 	//this method is used to get the Thread local driver after setting it up 
 	
+	private void init_RemoteDriver(String browserName) {
+	
+		
+		System.out.println("running on remote browser = "+ browserName);
+		
+		if(browserName.equalsIgnoreCase("chrome"))
+		{
+		
+		DesiredCapabilities dcaps= DesiredCapabilities.chrome();
+		dcaps.setCapability(ChromeOptions.CAPABILITY,optionsManager.getChromeOptions());
+		
+		try {
+			tldriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), dcaps));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+		else if(browserName.equalsIgnoreCase("firefox"))
+		{
+			DesiredCapabilities fcaps= DesiredCapabilities.firefox();
+			fcaps.setCapability(FirefoxOptions.FIREFOX_OPTIONS,optionsManager.getFireFoxOptions());
+			try {
+				tldriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")),fcaps));
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+	}
+
 	public WebDriver getmyThreadLocalDriver()
 	{
 		
@@ -92,7 +147,6 @@ public class DriverFactory {
 	}
 	
 	
-
 	
 	public Properties initProperties()
 	{
