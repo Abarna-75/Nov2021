@@ -54,29 +54,33 @@ public class DriverFactory {
 			
 			if(Boolean.parseBoolean(prop.getProperty("remote")))
 			{
-				init_RemoteDriver("chrome");
+				init_remoteDriver("chrome");
 			}
-			else
+			else {
 				
 				tldriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
 			
+					}
 		}
 		 
 		else if(browserName.equalsIgnoreCase("firefox"))
 		{
 			
-			WebDriverManager.firefoxdriver().setup();
-			
-			if(Boolean.parseBoolean((prop.getProperty("remote"))))
-					{
-									init_RemoteDriver("firefox");
-					}
-			tldriver.set(new FirefoxDriver(optionsManager.getFireFoxOptions()));
-		}
+				WebDriverManager.firefoxdriver().setup();
+				
+				if(Boolean.parseBoolean((prop.getProperty("remote"))))
+						{
+										init_remoteDriver("firefox");
+						}
+				else {
+				tldriver.set(new FirefoxDriver(optionsManager.getFireFoxOptions()));
+			}}
+		
 		else
+		{
 			
 			System.out.println("Please pass the right browser name ");
-		
+		}
 		
 		getmyThreadLocalDriver().manage().deleteAllCookies();
 		getmyThreadLocalDriver().manage().window().maximize();
@@ -87,7 +91,7 @@ public class DriverFactory {
 	//@return 
 	//this method is used to get the Thread local driver after setting it up 
 	
-	private void init_RemoteDriver(String browserName) {
+	private void init_remoteDriver(String browserName) {
 	
 		
 		System.out.println("running on remote browser = "+ browserName);
@@ -103,7 +107,7 @@ public class DriverFactory {
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+				} 
 		}
 		else if(browserName.equalsIgnoreCase("firefox"))
 		{
@@ -150,7 +154,7 @@ public class DriverFactory {
 	
 	public Properties initProperties()
 	{
-		Properties prop=null;
+	
 		FileInputStream finput =null;
 		String env =System.getProperty("env");
 		
